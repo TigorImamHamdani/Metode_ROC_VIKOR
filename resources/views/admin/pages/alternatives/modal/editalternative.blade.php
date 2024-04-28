@@ -1,0 +1,52 @@
+{{-- Modal START --}}
+<div class="modal fade" id="editAlternatifModal" tabindex="-1" role="dialog" aria-labelledby="editAlternatifModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAlternatifModalLabel">Edit Alternatif</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('admin.alternatives.update', $alternative->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-3">
+                        <label for="alternative_code" class="form-label">Kode Alternatif</label>
+                        <input type="text" name="alternative_code" id="alternative_code" class="form-control"
+                            placeholder="Masukkan Kode Alternatif" value="{{ $alternative->alternative_code }}">
+                        @error('alternative_code')
+                            <div class="alert alert-danger" style="margin-top: 5px">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="alternative_name" class="form-label">Nama Alternatif</label>
+                        <input type="text" name="alternative_name" id="alternative_name" class="form-control"
+                            placeholder="Masukkan Nama Alternatif" value="{{ $alternative->alternative_name }}">
+                        @error('alternative_name')
+                            <div class="alert alert-danger" style="margin-top: 5px">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Deskripsi</label>
+                        <input type="text" name="description" id="description" class="form-control"
+                            placeholder="Masukkan description" value="{{ $alternative->description }}">
+                        @error('description')
+                            <div class="alert alert-danger" style="margin-top: 5px">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Foto</label>
+                        <input type="file" id="image" name="image" class="form-control">
+                        @error('image')
+                            <div class="alert alert-danger" style="margin-top: 5px">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- Modal END --}}

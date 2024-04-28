@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @include('admin.layouts.head')
+    <style>
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden; /* Menyembunyikan overflow agar tidak muncul scrollbar */
+        }
+    </style>
+</head>
+
+<body class="g-sidenav-show   bg-gray-100">
+    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <aside
+        class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
+        id="sidenav-main">
+        <div class="sidenav-header">
+            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+                aria-hidden="true" id="iconSidenav"></i>
+            <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
+                target="_blank">
+                <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img h-100" alt="main_logo">
+                <span class="ms-1 font-weight-bold">VIKOR ROC</span>
+            </a>
+        </div>
+        <hr class="horizontal dark mt-0">
+        <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+            {{-- Start Sidebar --}}
+            @include('admin.layouts.sidebar')
+            {{-- End Sidebar --}}
+        </div>
+    </aside>
+    <main class="main-content position-relative border-radius-lg">
+        <!-- Navbar -->
+        @include('admin.layouts.navbar')
+        <!-- End Navbar -->
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-header pb-0">
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Data Alternatif</h6>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#addAlternatifModal">Tambah Alternatif</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pt-0 pb-2">
+                            <div class="table-container">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Kode Alternatif</th>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Nama Alternatif</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Aksi</th>
+                                            <th class="text-secondary opacity-7"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Start Modal --}}
+
+        @include('admin.pages.alternatives.modal.addalternative')
+
+        {{-- @include('admin.pages.alternatives.modal.editalternative') --}}
+
+        {{-- End Modal --}}
+
+        {{-- Start Footer --}}
+
+        @include('admin.layouts.footer')
+
+        {{-- End Footer --}}
+        </div>
+    </main>
+    <!--   Core JS Files   -->
+    @include('admin.layouts.script')
+</body>
+
+</html>
