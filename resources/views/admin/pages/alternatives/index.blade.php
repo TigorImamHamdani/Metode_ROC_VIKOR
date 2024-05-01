@@ -74,7 +74,45 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        @foreach ($alternatives as $alternative)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-4 py-1">
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">
+                                                                {{ $alternative->alternative_code }}
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $alternative->alternative_name }}</p>
+                                                </td>
+                                                <td class="align-middle" style="text-align: center;">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-link text-secondary mb-0 " type="button"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa fa-ellipsis-v text-xs"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" href="#">Show</a></li>
+                                                            <li><a class="dropdown-item" href="{{ route('admin.alternatives.edit', $alternative->id) }}">Edit</a></li>
+                                                            <li>
+                                                                <form
+                                                                    action="{{ route('admin.alternatives.destroy', $alternative->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="dropdown-item"
+                                                                        onclick="return confirm('Anda yakin ingin menghapus data ini?')">Delete</button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
