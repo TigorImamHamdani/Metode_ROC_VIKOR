@@ -55,6 +55,31 @@ class CriteriaController extends Controller
         return view('admin.pages.criterias.index', compact('criterias', 'weightValue', 'alternatives'));
     }
 
+    public function edit(Criteria $criteria)
+    {
+        return view('admin.pages.criterias.edit', compact('criteria'));
+    }
+
+    public function update(Request $request, Criteria $criteria)
+    {
+        $validator = Validator::make($request->all(), [
+            'criteria_code' => 'required',
+            'criteria_name' => 'required',
+            'description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $criteria->criteria_code = $request->criteria_code;
+        $criteria->criteria_name = $request->criteria_name;
+        $criteria->description = $request->description;
+        $criteria->save();
+
+        return redirect()->route('admin.criterias.index')->with('success', 'Data alternatif berhasil diperbarui.');
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

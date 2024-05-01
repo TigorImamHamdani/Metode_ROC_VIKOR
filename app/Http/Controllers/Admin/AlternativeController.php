@@ -42,6 +42,38 @@ class AlternativeController extends Controller
         return redirect()->route('admin.alternatives.index')->with('success', 'Data alternatif berhasil ditambahkan.');
     }
 
+    public function edit(Alternative $alternative)
+    {
+        return view('admin.pages.alternatives.edit', compact('alternative'));
+    }
+
+    public function update(Request $request, Alternative $alternative)
+    {
+        $validator = Validator::make($request->all(), [
+            'alternative_code' => 'required',
+            'alternative_name' => 'required',
+            'description' => 'required',
+            'image' => 'image',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $alternative->image = $imagePath;
+        }
+
+        $alternative->alternative_code = $request->alternative_code;
+        $alternative->alternative_name = $request->alternative_name;
+        $alternative->description = $request->description;
+        $alternative->save();
+
+        return redirect()->route('admin.alternatives.index')->with('success', 'Data alternatif berhasil diperbarui.');
+    }
+
+
     public function destroy(Alternative $alternative)
     {
         $alternative->delete();
