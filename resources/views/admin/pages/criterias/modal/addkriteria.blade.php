@@ -14,7 +14,7 @@
                     Skala Penilaian Bobot 1 sampai 100
                     <br> Nilai bobot yang dimasukkan tidak boleh sama dengan kriteria yang lain.
                 </p>
-                <form action="#" method="POST">
+                <form action="{{ route('admin.criterias.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="criteria_code" class="form-label">Kode Kriteria</label>

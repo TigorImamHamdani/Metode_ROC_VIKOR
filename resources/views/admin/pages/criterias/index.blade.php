@@ -78,7 +78,47 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        @foreach ($criterias as $criteria)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-3 py-1">
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">{{ $criteria->criteria_code }}</h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $criteria->criteria_name }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $criteria->description }}</p>
+                                                </td>
+                                                <td class="align-middle" style="text-align: center;">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-link text-secondary mb-0 " type="button"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa fa-ellipsis-v text-xs"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" href="#">Show</a></li>
+                                                            <li><a class="dropdown-item" href="{{ route('admin.criterias.edit', $criteria->id) }}">Edit</a></li>
+                                                            <li>
+                                                                <form
+                                                                    action="{{ route('admin.criterias.destroy', $criteria->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="dropdown-item"
+                                                                        onclick="return confirm('Anda yakin ingin menghapus data ini?')">Delete</button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
