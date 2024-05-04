@@ -10,15 +10,9 @@
     <aside
         class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
         id="sidenav-main">
-        <div class="sidenav-header">
-            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-                aria-hidden="true" id="iconSidenav"></i>
-            <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
-                target="_blank">
-                <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img h-100" alt="main_logo">
-                <span class="ms-1 font-weight-bold">VIKOR ROC</span>
-            </a>
-        </div>
+
+        @include('sidenav')
+        
         <hr class="horizontal dark mt-0">
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             {{-- Start Sidebar --}}
@@ -68,7 +62,95 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        @foreach ($alternatives as $alternative)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-3 py-1">
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">{{ $alternative->alternative_code }}
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                @foreach ($criterias as $criteria)
+                                                    <td>
+                                                        @php
+                                                            $alternative_value = $alternative
+                                                                ->alternative_values()
+                                                                ->where('criteria_id', $criteria->id)
+                                                                ->first();
+                                                        @endphp
+                                                        @if ($alternative_value)
+                                                            <h6 class="text-xs font-weight-bold mb-0">{{ $alternative_value->value }}</h6>
+                                                        @else
+                                                            <h6 class="text-xs font-weight-bold mb-0">-</h6>
+                                                        @endif
+                                                    </td>
+                                                @endforeach
+                                                <td class="align-middle" style="text-align: center;">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-link text-secondary mb-0 " type="button"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa fa-ellipsis-v text-xs"></i>
+                                                        </button>
+                                                        @foreach($alternative_values as $alternative_value)
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" href="#">Show</a></li>
+                                                            <li>
+                                                                <form action="{{ route('user.alternative-values.destroy', $alternative_value->alternative_id) }}" method="post">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="dropdown-item">Delete</button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    @endforeach
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        <td>
+                                            <div class="d-flex px-3 py-1">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">Nilai Maksimal</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        @foreach ($criterias as $criteria)
+                                            <td>
+                                                <h6 class="text-xs font-weight-bold mb-0">
+                                                    @php
+                                                        $maxValue = \App\Models\AlternativeValue::where(
+                                                            'criteria_id',
+                                                            $criteria->id,
+                                                        )->max('value');
+                                                        echo $maxValue;
+                                                    @endphp
+                                                </h6>
+                                            </td>
+                                        @endforeach
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-3 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">Nilai Minimal</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            @foreach ($criterias as $criteria)
+                                                <td>
+                                                    <h6 class="text-xs font-weight-bold mb-0">
+                                                        @php
+                                                            $minValue = \App\Models\AlternativeValue::where(
+                                                                'criteria_id',
+                                                                $criteria->id,
+                                                            )->min('value');
+                                                            echo $minValue;
+                                                        @endphp
+                                                    </h6>
+                                                </td>
+                                            @endforeach
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
