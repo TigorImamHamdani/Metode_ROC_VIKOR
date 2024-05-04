@@ -21,15 +21,9 @@
     <aside
         class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
         id="sidenav-main">
-        <div class="sidenav-header">
-            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-                aria-hidden="true" id="iconSidenav"></i>
-            <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
-                target="_blank">
-                <img src="{{ asset('assets/img/logo-ct-dark.png') }}" class="navbar-brand-img h-100" alt="main_logo">
-                <span class="ms-1 font-weight-bold">VIKOR ROC</span>
-            </a>
-        </div>
+
+        @include('sidenav')
+        
         <hr class="horizontal dark mt-0">
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             {{-- Start Sidebar --}}
@@ -50,10 +44,6 @@
                             <div class="row">
                                 <div class="col">
                                     <h6>Data Kriteria</h6>
-                                </div>
-                                <div class="col-auto">
-                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#addKriteriaModal">Tambah Kriteria</a>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +74,65 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
+                                        @foreach ($criterias as $criteria)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-3 py-1">
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">{{ $criteria->criteria_code }}</h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ $criteria->criteria_name }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $criteria->weight }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        @php
+                                                            $weightRangking = 1;
+                                                            foreach ($criterias as $otherCriteria) {
+                                                                if (
+                                                                    $criteria->weight <
+                                                                    $otherCriteria->weight
+                                                                ) {
+                                                                    $weightRangking++;
+                                                                }
+                                                            }
+                                                            echo $weightRangking;
+                                                        @endphp
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-bold mb-0">
+                                                        {{ number_format($weightValue[$criteria->id], 3) }} </p>
+                                                </td>
+                                                <td class="align-middle" style="text-align: center;">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-link text-secondary mb-0 " type="button"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa fa-ellipsis-v text-xs"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" href="#">Show</a></li>
+                                                            <li><a class="dropdown-item" href="{{ route('user.weight.edit', $criteria->id) }}">Input Bobot</a></li>
+                                                                <form
+                                                                    action="{{ route('user.weight.destroy', $criteria->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="dropdown-item"
+                                                                        onclick="return confirm('Anda yakin ingin menghapus data ini?')">Delete</button>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -92,10 +140,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Modal --}}
-
-            @include('user.pages.input-weight.modal.addweight')
 
             {{-- Start Footer --}}
 
