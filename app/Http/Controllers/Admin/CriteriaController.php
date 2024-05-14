@@ -60,6 +60,11 @@ class CriteriaController extends Controller
         return view('admin.pages.criterias.edit', compact('criteria'));
     }
 
+    public function show(Criteria $criteria)
+    {
+        return view('admin.pages.criterias.show', compact('criteria'));
+    }
+
     public function update(Request $request, Criteria $criteria)
     {
         $validator = Validator::make($request->all(), [

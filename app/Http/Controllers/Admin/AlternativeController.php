@@ -21,6 +21,7 @@ class AlternativeController extends Controller
             'alternative_code' => 'required',
             'alternative_name' => 'required',
             'description' => 'required',
+            'location' => 'required',
             'image' => 'required|image',
         ]);
 
@@ -34,8 +35,7 @@ class AlternativeController extends Controller
             'alternative_code' => $request->alternative_code,
             'alternative_name' => $request->alternative_name,
             'description' => $request->description,
-            'utility_measure' => 0,
-            'regret_measure' => 0,
+            'location' => $request->location,
             'image' => $imagePath,
         ]);
 
@@ -47,12 +47,18 @@ class AlternativeController extends Controller
         return view('admin.pages.alternatives.edit', compact('alternative'));
     }
 
+    public function show(Alternative $alternative)
+    {
+        return view('admin.pages.alternatives.show', compact('alternative'));
+    }
+
     public function update(Request $request, Alternative $alternative)
     {
         $validator = Validator::make($request->all(), [
             'alternative_code' => 'required',
             'alternative_name' => 'required',
             'description' => 'required',
+            'location' => 'required',
             'image' => 'image',
         ]);
 
@@ -67,6 +73,7 @@ class AlternativeController extends Controller
 
         $alternative->alternative_code = $request->alternative_code;
         $alternative->alternative_name = $request->alternative_name;
+        $alternative->location = $request->location;
         $alternative->description = $request->description;
         $alternative->save();
 
