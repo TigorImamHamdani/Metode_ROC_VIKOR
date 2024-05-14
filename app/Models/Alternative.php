@@ -13,6 +13,7 @@ class Alternative extends Model
         'alternative_code',
         'alternative_name',
         'description',
+        'location',
         'image',
     ];
 
