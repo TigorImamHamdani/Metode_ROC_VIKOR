@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Criteria;
 use App\Models\Alternative;
 use App\Models\AlternativeValue;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class AlternativeValueController extends Controller
@@ -17,6 +18,40 @@ class AlternativeValueController extends Controller
         $alternative_values = AlternativeValue::all();
         return view('user.pages.input-matrix.index', compact('criterias', 'alternatives', 'alternative_values'));
     }
+
+    public function edit($alternative_id)
+    {
+        $criterias = Criteria::all();
+        $alternatives = Alternative::findOrFail($alternative_id);
+        $alternative_values = AlternativeValue::all();
+        return view('user.pages.input-matrix.edit', compact('criterias', 'alternatives', 'alternative_values'));
+    }
+
+
+    public function update(Request $request, $alternative_id)
+    {
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'values' => 'required|array',
+            'values.*' => 'required|numeric',
+        ]);
+
+        // If validation fails, redirect back with errors
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Loop through each value and update or create alternative value
+        foreach ($request->values as $criteria_id => $value) {
+            $alternativeValue = AlternativeValue::updateOrCreate(
+                ['alternative_id' => $alternative_id, 'criteria_id' => $criteria_id],
+                ['value' => $value]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Data nilai alternatif berhasil diperbarui');
+    }
+
 
     // Input Berdasarkan Alternatif
     public function store(Request $request)
