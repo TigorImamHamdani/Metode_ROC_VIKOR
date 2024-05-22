@@ -57,36 +57,34 @@ class WeightController extends Controller
 
     public function store(Request $request)
     {
+        // Validation rules for array of values
         $validator = Validator::make($request->all(), [
-            'criteria_id' => 'required', // Updated validation rule
-            'weight' => 'required',
+            'values' => 'required|array',
+            'values.*' => 'required|numeric|min:1|max:100',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $criteria = Criteria::find($request->criteria_id);
+        // Iterate through the array of values and save each weight
+        foreach ($request->values as $criteria_id => $weight) {
+            $criteria = Criteria::find($criteria_id);
 
-        if (!$criteria) {
-            return redirect()->back()->with('error', 'Kriteria tidak ditemukan.');
+            if ($criteria) {
+                $criteria->weight = $weight;
+                $criteria->save();
+            }
         }
 
-        $criteria->weight = $request->weight;
-        $criteria->save();
-
-        return redirect()->route('user.weight.index')->with('success', 'Bobot berhasil diperbarui.');
+        return redirect()->route('user.result.index')->with('success', 'Bobot berhasil diperbarui.');
     }
 
-    public function edit($criteria_id) {
-        $criteria = Criteria::findOrFail($criteria_id);
-        return view('user.pages.input-weight.edit', compact('criteria'));
-    }
-
-    public function update(Request $request, $criteria_id) {
+    public function update(Request $request, $criteria_id)
+    {
         // Validate the request
         $request->validate([
-            'weight' => 'required|numeric', // Add any additional validation rules here
+            'weight' => 'required|numeric|min:1|max:100',
         ]);
 
         // Find the criteria by ID
@@ -98,7 +96,14 @@ class WeightController extends Controller
         ]);
 
         // Redirect back with success message
-        return redirect()->route('user.weight.index')->with('success', 'Weight updated successfully.');
+        return redirect()->route('user.result.index')->with('success', 'Data kriteria berhasil disimpan.');
+    }
+
+
+    public function edit($criteria_id)
+    {
+        $criteria = Criteria::findOrFail($criteria_id);
+        return view('user.pages.input-weight.edit', compact('criteria'));
     }
 
     public function destroy(Criteria $criteria)
