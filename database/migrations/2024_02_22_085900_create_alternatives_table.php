@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('alternative_code');
             $table->string('alternative_name');
             $table->string('description');
+            $table->string('location');
             $table->string('image');
             $table->timestamps();
         });
