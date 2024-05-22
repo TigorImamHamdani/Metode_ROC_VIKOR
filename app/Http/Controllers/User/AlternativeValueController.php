@@ -41,19 +41,16 @@ class AlternativeValueController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Loop through each value and update or create alternative value
         foreach ($request->values as $criteria_id => $value) {
-            $alternativeValue = AlternativeValue::updateOrCreate(
+            AlternativeValue::updateOrCreate(
                 ['alternative_id' => $alternative_id, 'criteria_id' => $criteria_id],
                 ['value' => $value]
             );
         }
 
-        return redirect()->back()->with('success', 'Data nilai alternatif berhasil diperbarui');
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
-
-    // Input Berdasarkan Alternatif
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -64,16 +61,13 @@ class AlternativeValueController extends Controller
         $alternativeId = $request->criteria;
 
         foreach ($request->values as $criteriaId => $value) {
-            // Cek apakah data sudah ada di tabel
             $existingData = AlternativeValue::where('alternative_id', $alternativeId)
                 ->where('criteria_id', $criteriaId)
                 ->first();
 
             if ($existingData) {
-                // Jika sudah ada, perbarui nilainya
                 $existingData->update(['value' => $value]);
             } else {
-                // Jika belum ada, buat data baru
                 AlternativeValue::create([
                     'alternative_id' => $alternativeId,
                     'criteria_id' => $criteriaId,
@@ -81,8 +75,10 @@ class AlternativeValueController extends Controller
                 ]);
             }
         }
-        return redirect()->back()->with('success', 'Data nilai alternatif berhasil disimpan');
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
+
 
     public function destroy($alternative_id)
     {
