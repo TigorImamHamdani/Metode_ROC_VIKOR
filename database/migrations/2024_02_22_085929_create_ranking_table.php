@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('rankings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('alternative_id');
+            $table->unsignedBigInteger('id_user');
             $table->string('result_rank')->nullable();
-            $table->float('utility_measure')->default(false);
-            $table->float('regret_measure')->default(false); 
-            $table->float('result_cal')->default(false);
+            $table->double('utility_measure')->default(0);
+            $table->double('regret_measure')->default(0);
+            $table->double('result_cal')->default(0);
             $table->foreign('alternative_id')->references('id')->on('alternatives')->onDelete('cascade');
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade'); 
             $table->timestamps();
         });
     }
