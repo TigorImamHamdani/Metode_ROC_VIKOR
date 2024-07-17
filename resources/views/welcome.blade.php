@@ -1,3 +1,150 @@
+{{-- @foreach ($alternatives as $alternative)
+            <tr>
+                @php
+                    $utilityMeasure = 0;
+                    $regretMeasure = -INF;
+                @endphp
+
+                @foreach ($criterias as $criteria)
+                    @php
+                        $alternative_value = $alternative
+                            ->alternative_values()
+                            ->where('criteria_id', $criteria->id)
+                            ->first();
+                    @endphp
+                    @if ($alternative_value)
+                        @php
+                            $maxValue = \App\Models\AlternativeValue::where('criteria_id', $criteria->id)->max('value');
+                            $minValue = \App\Models\AlternativeValue::where('criteria_id', $criteria->id)->min('value');
+
+                            $totalValue = floatval(
+                                ($maxValue - $alternative_value->value) /
+                                    ($maxValue - $alternative_value->value - ($minValue - $alternative_value->value)),
+                            );
+                            $result = $weightValue[$criteria->id] * $totalValue;
+
+                            if ($result > $regretMeasure) {
+                                $regretMeasure = $result;
+                            }
+
+                            $utilityMeasure += $result;
+                        @endphp
+                    @endif
+                @endforeach
+
+                @php
+                    $rankings = \App\Models\Ranking::all();
+                    $Qi =
+                        (0.5 * ($utilityMeasure - \App\Models\Ranking::max('utility_measure'))) /
+                            (\App\Models\Ranking::min('utility_measure') -
+                                \App\Models\Ranking::max('utility_measure')) +
+                        ((1 - 0.5) * ($regretMeasure - \App\Models\Ranking::max('regret_measure'))) /
+                            (\App\Models\Ranking::min('regret_measure') - \App\Models\Ranking::max('regret_measure'));
+
+                    $existingRanking = \App\Models\Ranking::where('alternative_id', $alternative->id)->first();
+
+                    if ($existingRanking) {
+                        // Jika data sudah ada, lakukan pembaruan
+                        $existingRanking->result_cal = $Qi;
+                        $existingRanking->save();
+                    } else {
+                        // Jika data belum ada, buat data baru
+                        $ranking = new \App\Models\Ranking();
+                        $ranking->alternative_id = $alternative->id;
+                        $ranking->result_cal = $Qi;
+                        $ranking->save();
+                    }
+                @endphp
+
+            </tr>
+        @endforeach --}}
+
+{{-- @php
+                    $maxUtility = \App\Models\Ranking::max('utility_measure');
+                    $minUtility = \App\Models\Ranking::min('utility_measure');
+                    $maxRegret = \App\Models\Ranking::max('regret_measure');
+                    $minRegret = \App\Models\Ranking::min('regret_measure');
+
+                    // Check if denominators are zero
+                    if ($minUtility - $maxUtility != 0 && $minRegret - $maxRegret != 0) {
+                        $Qi =
+                            (0.5 * ($utilityMeasure - $maxUtility)) / ($minUtility - $maxUtility) +
+                            ((1 - 0.5) * ($regretMeasure - $maxRegret)) / ($minRegret - $maxRegret);
+
+                        // Menghitung peringkat Qi
+                        $rank = 0;
+                        foreach ($rankings as $ranking) {
+                            $altQi =
+                                (0.5 * ($ranking->utility_measure - $maxUtility)) / ($minUtility - $maxUtility) +
+                                ((1 - 0.5) * ($ranking->regret_measure - $maxRegret)) / ($minRegret - $maxRegret);
+
+                            if ($altQi < $Qi) {
+                                $rank++;
+                            }
+                        }
+
+                        // Cari atau buat entri Ranking untuk alternative saat ini
+                        $existingRanking = \App\Models\Ranking::firstOrCreate([
+                            'alternative_id' => $alternative->id,
+                        ]);
+
+                        // Simpan peringkat Qi ke dalam entri Ranking
+                        $existingRanking->result_rank = $rank;
+                        $existingRanking->result_cal = $Qi;
+                        $existingRanking->save();
+                    } else {
+                        // Handle division by zero error
+                        // For example, you can set $Qi to some default value or handle it based on your logic
+                        $Qi = 0; // Setting default value to avoid division by zero
+                        // Handle other operations or log error message
+                    }
+                @endphp --}}
+
+
+                {{-- @php
+                    $maxUtility = \App\Models\Ranking::max('utility_measure');
+                    $minUtility = \App\Models\Ranking::min('utility_measure');
+                    $maxRegret = \App\Models\Ranking::max('regret_measure');
+                    $minRegret = \App\Models\Ranking::min('regret_measure');
+
+                    if (
+                        $maxUtility != $minUtility &&
+                        $maxRegret != $minRegret &&
+                        $minUtility - $maxUtility != 0 &&
+                        $minRegret - $maxRegret != 0
+                    ) {
+                        $Qi =
+                            (0.5 * ($utilityMeasure - $maxUtility)) / ($minUtility - $maxUtility) +
+                            ((1 - 0.5) * ($regretMeasure - $maxRegret)) / ($minRegret - $maxRegret);
+
+                        // Menghitung peringkat Qi
+                        $rank = 0;
+                        foreach ($rankings as $ranking) {
+                            $altQi =
+                                (0.5 * ($ranking->utility_measure - $maxUtility)) / ($minUtility - $maxUtility) +
+                                ((1 - 0.5) * ($ranking->regret_measure - $maxRegret)) / ($minRegret - $maxRegret);
+
+                            if ($altQi < $Qi) {
+                                $rank++;
+                            }
+                        }
+
+                        // Cari atau buat entri Ranking untuk alternative saat ini
+                        $existingRanking = \App\Models\Ranking::firstOrCreate([
+                            'alternative_id' => $alternative->id,
+                        ]);
+
+                        // Simpan peringkat Qi ke dalam entri Ranking
+                        $existingRanking->result_rank = $rank;
+                        $existingRanking->result_cal = $Qi;
+                        $existingRanking->save();
+                    } else {
+                        // Handle jika pembagian dengan nol terjadi
+                        // Misalnya, atur nilai Qi dan peringkat menjadi 0
+                        $Qi = 0;
+                        $rank = 0;
+                    }
+                @endphp --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>

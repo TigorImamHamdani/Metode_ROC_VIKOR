@@ -51,40 +51,57 @@
                                             @endif
                                         </div>
                                         <div class="mb-3">
-                                            <input type="password" class="form-control form-control-lg" name="password"
-                                                placeholder="Password" aria-label="Password">
+                                            <input type="password" class="form-control form-control-lg" name="password" id="password-field" placeholder="Password" aria-label="Password">
                                             @if ($errors->has('password'))
                                                 <span class="text-danger">{{ $errors->first('password') }}</span>
                                             @endif
                                         </div>
                                         <div class="mb-3">
-                                            <input type="password" class="form-control form-control-lg"
-                                                name="password_confirmation" placeholder="Confirm Password"
-                                                aria-label="Confirm Password">
+                                            <input type="password" class="form-control form-control-lg" name="password_confirmation" id="confirm-password-field" placeholder="Confirm Password" aria-label="Confirm Password">
                                         </div>
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="rememberMe"
-                                                name="remember_me">
-                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        <div>
+                                            <input type="checkbox" onclick="togglePasswordVisibility()" aria-label="Show Password">
+                                            <label class="custom-label" style="font-weight: normal;">Tampilkan Password</label>
                                         </div>
                                         <div class="text-center">
                                             <button type="submit"
                                                 class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Register</button>
                                         </div>
                                     </form>
-                                </div>
+                                    <script>
+                                        function togglePasswordVisibility() {
+                                            var passwordField = document.getElementById('password-field');
+                                            var confirmPasswordField = document.getElementById('confirm-password-field');
 
+                                            if (passwordField.type === 'password') {
+                                                passwordField.type = 'text';
+                                                confirmPasswordField.type = 'text';
+                                            } else {
+                                                passwordField.type = 'password';
+                                                confirmPasswordField.type = 'password';
+                                            }
+                                        }
+                                        </script>
+                                </div>
+                                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                                    <p class="mb-4 text-sm mx-auto">
+                                        Sudah punya akun ?
+                                        <a href="{{ route('login') }}"
+                                            class="text-primary text-gradient font-weight-bold">Login</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div
                             class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
                             <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
-                                style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg');background-size: cover;">
-                                <span class="mask bg-gradient-primary opacity-6"></span>
-                                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Attention is the new
-                                    currency"</h4>
-                                <p class="text-white position-relative">The more effortless the writing looks, the more
-                                    effort the writer actually put into the process.</p>
+                                style="background-image: url('https://e1.pxfuel.com/desktop-wallpaper/592/209/desktop-wallpaper-drone-view-aerial-view-beach-sand-and-water-by-rich-lock-aerial-view-beach-sand-and-ocean-waves.jpg'); background-size: cover;">
+                                <span class="mask bg-gradient-primary opacity-3"></span>
+                                <h4 class="mt-5 text-white font-weight-bolder position-relative">Selamat Datang di
+                                    SIVIRO</h4>
+                                <p class="text-white position-relative">"SIVIRO adalah sebuah sistem pendukung keputusan
+                                    berbasis website untuk mempermudah para pengunjung menemukan rekomendasi pantai
+                                    terbaik di Kabupaten Malang"</p>
                             </div>
                         </div>
                     </div>
@@ -111,17 +128,30 @@
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../assets/js/argon-dashboard.min.js?v=2.0.4"></script>
 
-    @if ($message = Session::get('success'))
+    @php
+        $messageType = '';
+        $message = '';
+
+        if (Session::get('success')) {
+            $messageType = 'success';
+            $message = Session::get('success');
+        } elseif (Session::get('failed')) {
+            $messageType = 'error'; // SweetAlert2 uses 'error' for failure messages
+            $message = Session::get('failed');
+        }
+    @endphp
+
+    @if ($message)
         <script>
-            Swal.fire('{{ $message }}');
+            Swal.fire({
+                title: '{{ $messageType === 'success' ? 'Success' : 'Error' }}',
+                text: '{{ $message }}',
+                icon: '{{ $messageType }}', // This will show the correct icon
+                confirmButtonText: 'OK'
+            });
         </script>
     @endif
 
-    @if ($message = Session::get('failed'))
-        <script>
-            Swal.fire('{{ $message }}');
-        </script>
-    @endif
 </body>
 
 </html>

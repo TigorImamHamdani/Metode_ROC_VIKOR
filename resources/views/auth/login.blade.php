@@ -36,7 +36,7 @@
                                         <div class="alert alert-danger">
                                             <ul>
                                                 @foreach ($errors->all() as $item)
-                                                    <p class="mb-0" >{{ $item }}</p>
+                                                    <p class="mb-0">{{ $item }}</p>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -47,29 +47,42 @@
                                         @csrf
                                         <div class="mb-3">
                                             <input type="email" class="form-control form-control-lg"
-                                                placeholder="email" aria-label="email" name="email"
+                                                placeholder="Email" aria-label="email" name="email"
                                                 value="{{ old('email') }}">
                                         </div>
                                         <div class="mb-3">
-                                            <input type="password" class="form-control form-control-lg"
-                                                placeholder="password" aria-label="password" name="password">
+                                            <div class="input-group">
+                                                <input type="password" class="form-control form-control-lg"
+                                                    placeholder="Password" aria-label="password" name="password"
+                                                    id="password">
+                                            </div>
                                         </div>
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="rememberMe">
-                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                                        <div style="align-items: center;"><input type="checkbox"
+                                                onclick="togglePasswordVisibility()" aria-label="Show Password">
+                                                <label class="custom-label" style="font-weight: normal;">Tampilkan Password</label>
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" name="submit"
                                                 class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Log in</button>
                                         </div>
                                     </form>
+
+                                    <script>
+                                        function togglePasswordVisibility() {
+                                            var passwordInput = document.getElementById("password");
+                                            if (passwordInput.type === "password") {
+                                                passwordInput.type = "text";
+                                            } else {
+                                                passwordInput.type = "password";
+                                            }
+                                        }
+                                    </script>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                                     <p class="mb-4 text-sm mx-auto">
-                                        Don't have an account?
+                                        Belum punya akun ?
                                         <a href="{{ route('register-view') }}"
-                                            class="text-primary text-gradient font-weight-bold">Sign
-                                            up</a>
+                                            class="text-primary text-gradient font-weight-bold">Register</a>
                                     </p>
                                 </div>
                             </div>
@@ -77,13 +90,13 @@
                         <div
                             class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
                             <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
-                                style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg');
-          background-size: cover;">
-                                <span class="mask bg-gradient-primary opacity-6"></span>
-                                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Attention is the new
-                                    currency"</h4>
-                                <p class="text-white position-relative">The more effortless the writing looks, the more
-                                    effort the writer actually put into the process.</p>
+                                style="background-image: url('https://e1.pxfuel.com/desktop-wallpaper/592/209/desktop-wallpaper-drone-view-aerial-view-beach-sand-and-water-by-rich-lock-aerial-view-beach-sand-and-ocean-waves.jpg'); background-size: cover;">
+                                <span class="mask bg-gradient-primary opacity-3"></span>
+                                <h4 class="mt-5 text-white font-weight-bolder position-relative">Selamat Datang di
+                                    SIVIRO</h4>
+                                <p class="text-white position-relative">"SIVIRO adalah sebuah sistem pendukung keputusan
+                                    berbasis website untuk mempermudah para pengunjung menemukan rekomendasi pantai
+                                    terbaik di Kabupaten Malang"</p>
                             </div>
                         </div>
                     </div>
@@ -112,17 +125,30 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @if ($message = Session::get('success'))
+    @php
+        $messageType = '';
+        $message = '';
+
+        if (Session::get('success')) {
+            $messageType = 'success';
+            $message = Session::get('success');
+        } elseif (Session::get('failed')) {
+            $messageType = 'error';
+            $message = Session::get('failed');
+        }
+    @endphp
+
+    @if ($message)
         <script>
-            Swal.fire('{{ $message }}');
+            Swal.fire({
+                title: '{{ $messageType === 'success' ? 'Success' : 'Error' }}',
+                text: '{{ $message }}',
+                icon: '{{ $messageType }}',
+                confirmButtonText: 'OK'
+            });
         </script>
     @endif
 
-    @if ($message = Session::get('failed'))
-        <script>
-            Swal.fire('{{ $message }}');
-        </script>
-    @endif
 </body>
 
 </html>

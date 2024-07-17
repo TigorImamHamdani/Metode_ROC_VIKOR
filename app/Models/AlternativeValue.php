@@ -15,7 +15,7 @@ class AlternativeValue extends Model
         'value',
     ];
 
-    // Define relationships with both Alternatif and Kriteria using `belongsTo`
+    // Definisikan hubungan dengan Alternatif dan Kriteria menggunakan `belongsTo`
     public function alternative()
     {
         return $this->belongsTo(Alternative::class);

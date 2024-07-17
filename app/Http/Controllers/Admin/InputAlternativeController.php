@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Criteria;
@@ -9,24 +9,15 @@ use App\Models\AlternativeValue;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
-class AlternativeValueController extends Controller
+class InputAlternativeController extends Controller
 {
     public function index()
     {
         $criterias = Criteria::all();
         $alternatives = Alternative::all();
         $alternative_values = AlternativeValue::all();
-        return view('user.pages.input-matrix.index', compact('criterias', 'alternatives', 'alternative_values'));
+        return view('admin.pages.input-matrix.index', compact('criterias', 'alternatives', 'alternative_values'));
     }
-
-    public function edit($alternative_id)
-    {
-        $criterias = Criteria::all();
-        $alternatives = Alternative::findOrFail($alternative_id);
-        $alternative_values = AlternativeValue::all();
-        return view('user.pages.input-matrix.edit', compact('criterias', 'alternatives', 'alternative_values'));
-    }
-
 
     public function update(Request $request, $alternative_id)
     {

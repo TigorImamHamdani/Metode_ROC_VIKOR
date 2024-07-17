@@ -16,7 +16,7 @@ class UserRate extends Model
         'value',
     ];
 
-    // Define relationships with both Alternatif and Kriteria using `belongsTo`
+    // Definisikan hubungan dengan Alternatif, Kriteria dan User  menggunakan `belongsTo`
     public function alternative()
     {
         return $this->belongsTo(Alternative::class);

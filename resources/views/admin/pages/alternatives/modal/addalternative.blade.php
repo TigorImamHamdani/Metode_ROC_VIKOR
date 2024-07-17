@@ -30,8 +30,16 @@
                     <div class="mb-3">
                         <label for="description" class="form-label">Deskripsi</label>
                         <input type="text" name="description" id="description" class="form-control"
-                            placeholder="Masukkan description" value="{{ old('description') }}">
+                            placeholder="Masukkan Deskripsi" value="{{ old('description') }}">
                         @error('description')
+                            <div class="alert alert-danger" style="margin-top: 5px">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Link Lokasi</label>
+                        <input type="text" name="location" id="location" class="form-control"
+                            placeholder="Masukkan Link Lokasi" value="{{ old('location') }}">
+                        @error('location')
                             <div class="alert alert-danger" style="margin-top: 5px">{{ $message }}</div>
                         @enderror
                     </div>

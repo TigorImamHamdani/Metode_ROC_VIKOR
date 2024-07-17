@@ -25,21 +25,21 @@ class UserRateController extends Controller
 
     public function update(Request $request, $alternative_id)
     {
-        // Validate the request data
+        // Validasi data permintaan
         $validator = Validator::make($request->all(), [
             'values' => 'required|array',
             'values.*' => 'required|numeric',
         ]);
 
-        // If validation fails, redirect back with errors
+        // Jika validasi gagal, arahkan kembali dengan kesalahan
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Get the current user ID
+        // Dapatkan ID pengguna saat ini
         $userId = Auth::id();
 
-        // Loop through each value and update or create alternative value
+        // Ulangi setiap nilai dan perbarui atau buat nilai alternatif
         foreach ($request->values as $criteria_id => $value) {
             UserRate::updateOrCreate(
                 [
@@ -53,7 +53,7 @@ class UserRateController extends Controller
             );
         }
 
-        // Calculate and store the average values
+        // Hitung dan simpan nilai rata-rata
         $this->calculateAndStoreAverage($alternative_id);
 
         return redirect()->route('user.home.index')->with('success', 'Data nilai alternatif berhasil diperbarui');
@@ -68,7 +68,7 @@ class UserRateController extends Controller
 
         $alternativeId = $request->criteria;
 
-        // Get the current user ID
+        // Dapatkan ID pengguna saat ini
         $userId = Auth::id();
 
         foreach ($request->values as $criteriaId => $value) {
@@ -89,7 +89,7 @@ class UserRateController extends Controller
             }
         }
 
-        // Calculate and store the average values
+        // Hitung dan simpan nilai rata-rata
         $this->calculateAndStoreAverage($alternativeId);
 
         return redirect()->route('user.home.index')->with('success', 'Data nilai alternatif berhasil disimpan');
@@ -97,13 +97,13 @@ class UserRateController extends Controller
 
     private function calculateAndStoreAverage($alternativeId)
     {
-        // Calculate the average values grouped by alternative_id and criteria_id
+        // Hitung nilai rata-rata yang dikelompokkan berdasarkan id_alternatif dan id_kriteria
         $averageValues = UserRate::select('criteria_id', DB::raw('AVG(value) as avg_value'))
             ->where('alternative_id', $alternativeId)
             ->groupBy('criteria_id')
             ->get();
 
-        // Store or update the average values in AlternativeValue table
+        // Simpan atau perbarui nilai rata-rata dalam tabel AlternativeValue
         foreach ($averageValues as $avgValue) {
             AlternativeValue::updateOrCreate(
                 [

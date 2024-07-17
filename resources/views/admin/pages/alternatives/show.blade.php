@@ -51,7 +51,7 @@
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col">
-                                    <h6>Edit Data Alternatif</h6>
+                                    <h6>Detail Alternatif</h6>
                                 </div>
                             </div>
                         </div>
@@ -60,43 +60,40 @@
                             <div class="row">
                                 <div class="col">
                                     <!-- Start Form -->
-                                    <form action="{{ route('admin.alternatives.update', $alternative->id) }}"
-                                        method="POST" enctype="multipart/form-data">
-                                        @csrf
+                                    <form>
                                         @method('PUT')
                                         <div class="mb-3">
                                             <label for="alternative_code" class="form-label">Kode Alternatif</label>
                                             <input type="text" name="alternative_code" id="alternative_code"
                                                 class="form-control" placeholder="Masukkan Kode Alternatif"
-                                                value="{{ $alternative->alternative_code }}">
+                                                value="{{ $alternative->alternative_code }}" disabled>
                                         </div>
                                         <div class="mb-3">
                                             <label for="alternative_name" class="form-label">Nama Alternatif</label>
                                             <input type="text" name="alternative_name" id="alternative_name"
                                                 class="form-control" placeholder="Masukkan Nama Alternatif"
-                                                value="{{ $alternative->alternative_name }}">
+                                                value="{{ $alternative->alternative_name }}" disabled>
                                         </div>
                                         <div class="mb-3">
                                             <label for="description" class="form-label">Deskripsi</label>
                                             <input type="text" name="description" id="description"
                                                 class="form-control" placeholder="Masukkan Deskripsi"
-                                                value="{{ $alternative->description }}">
+                                                value="{{ $alternative->description }}" disabled>
                                         </div>
                                         <div class="mb-3">
                                             <label for="location" class="form-label">Link Lokasi</label>
-                                            <input type="text" name="location" id="location" class="form-control"
-                                                placeholder="Masukkan Link Lokasi" value="{{ $alternative->location }}">
+                                            <input type="text" name="location" id="location"
+                                                class="form-control" placeholder="Masukkan Link Lokasi"
+                                                value="{{ $alternative->location }}" disabled>
                                         </div>
                                         <div class="mb-3">
                                             <label for="image" class="form-label">Foto</label>
-                                            <input type="file" id="image" name="image" class="form-control">
+                                            <br>
                                             <img src="{{ asset('storage/' . $alternative->image) }}"
                                                 alt="Alternative Image" class="img-thumbnail"
-                                                style="max-width: 500px; margin-top: 10px;">
+                                                style="max-width: 500px; margin-top: 10px;" disabled>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                        <button type="button" onclick="history.back()"
-                                            class="btn btn-danger">Kembali</button>
+                                        <a href="{{ route('admin.alternatives.index') }}" class="btn btn-danger">Kembali</a>
                                     </form>
                                     <!-- End Form -->
                                 </div>
@@ -113,33 +110,6 @@
 
     <!--   Core JS Files   -->
     @include('admin.layouts.script')
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @php
-        $messageType = '';
-        $message = '';
-
-        if (Session::get('success')) {
-            $messageType = 'success';
-            $message = Session::get('success');
-        } elseif (Session::get('failed')) {
-            $messageType = 'error';
-            $message = Session::get('failed');
-        }
-    @endphp
-
-    @if ($message)
-        <script>
-            Swal.fire({
-                title: '{{ $messageType === 'success' ? 'Success' : 'Error' }}',
-                text: '{{ $message }}',
-                icon: '{{ $messageType }}', // This will show the correct icon
-                confirmButtonText: 'OK'
-            });
-        </script>
-    @endif
-
 </body>
 
 </html>

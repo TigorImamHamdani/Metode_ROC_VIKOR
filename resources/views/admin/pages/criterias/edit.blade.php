@@ -51,7 +51,7 @@
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col">
-                                    <h6>Input Nilai Bobot</h6>
+                                    <h6>Input Data Kriteria</h6>
                                 </div>
                             </div>
                         </div>
@@ -60,8 +60,8 @@
                             <div class="row">
                                 <div class="col">
                                     <!-- Start Form -->
-                                    <form action="{{ route('admin.criterias.update', $criteria->id) }}"
-                                        method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('admin.criterias.update', $criteria->id) }}" method="POST"
+                                        enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
                                         <div class="mb-3">
@@ -83,7 +83,8 @@
                                                 value="{{ $criteria->description }}">
                                         </div>
                                         <button type="submit" class="btn btn-primary">Submit</button>
-                                        <button type="button" onclick="history.back()" class="btn btn-danger">Kembali</button>
+                                        <button type="button" onclick="history.back()"
+                                            class="btn btn-danger">Kembali</button>
                                     </form>
                                     <!-- End Form -->
                                 </div>
@@ -100,6 +101,32 @@
 
     <!--   Core JS Files   -->
     @include('admin.layouts.script')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @php
+        $messageType = '';
+        $message = '';
+
+        if (Session::get('success')) {
+            $messageType = 'success';
+            $message = Session::get('success');
+        } elseif (Session::get('failed')) {
+            $messageType = 'error'; // SweetAlert2 uses 'error' for failure messages
+            $message = Session::get('failed');
+        }
+    @endphp
+
+    @if ($message)
+        <script>
+            Swal.fire({
+                title: '{{ $messageType === 'success' ? 'Success' : 'Error' }}',
+                text: '{{ $message }}',
+                icon: '{{ $messageType }}', // This will show the correct icon
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>

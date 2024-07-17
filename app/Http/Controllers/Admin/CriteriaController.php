@@ -82,7 +82,7 @@ class CriteriaController extends Controller
         $criteria->description = $request->description;
         $criteria->save();
 
-        return redirect()->route('admin.criterias.index')->with('success', 'Data alternatif berhasil diperbarui.');
+        return redirect()->route('admin.criterias.index')->with('success', 'Data kriteria berhasil diperbarui.');
     }
 
     public function store(Request $request)

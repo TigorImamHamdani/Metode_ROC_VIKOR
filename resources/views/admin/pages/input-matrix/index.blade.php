@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    @include('user.layouts.head')
+    @include('admin.layouts.head')
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
@@ -16,13 +16,13 @@
         <hr class="horizontal dark mt-0">
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             {{-- Start Sidebar --}}
-            @include('user.layouts.sidebar')
+            @include('admin.layouts.sidebar')
             {{-- End Sidebar --}}
         </div>
     </aside>
     <main class="main-content position-relative border-radius-lg">
         <!-- Navbar -->
-        @include('user.layouts.navbar')
+        @include('admin.layouts.navbar')
 
         <!-- End Navbar -->
         <div class="container-fluid py-4">
@@ -99,7 +99,7 @@
                                                         @foreach ($alternative_values as $alternative_value)
                                                         <ul class="dropdown-menu">
                                                             <li>
-                                                                <form action="{{ route('user.alternative-values.destroy', $alternative_value->alternative_id) }}" method="post">
+                                                                <form action="{{ route('admin.alternative-values.destroy', $alternative_value->alternative_id) }}" method="post">
                                                                     @csrf
                                                                     @method('DELETE')
                                                                     <button type="submit" class="dropdown-item">Delete</button>
@@ -111,7 +111,7 @@
                                                 </td> --}}
                                             </tr>
                                         @endforeach
-                                        <td>
+                                        {{-- <td>
                                             <div class="d-flex px-3 py-1">
                                                 <div class="d-flex flex-column justify-content-center">
                                                     <h6 class="mb-0 text-sm">Nilai Maksimal</h6>
@@ -151,7 +151,7 @@
                                                         @endphp
                                                     </h6>
                                                 </td>
-                                            @endforeach
+                                            @endforeach --}}
                                         </tr>
                                     </tbody>
                                 </table>
@@ -164,19 +164,22 @@
 
         {{-- Start Modal --}}
 
-        @include('user.pages.input-matrix.modal.addmatrik')
+        @include('admin.pages.input-matrix.modal.addmatrik')
 
         {{-- End Modal --}}
 
         {{-- Start Footer --}}
 
-        @include('user.layouts.footer')
+        @include('admin.layouts.footer')
 
         {{-- End Footer --}}
         </div>
     </main>
     <!--   Core JS Files   -->
-    @include('user.layouts.script')
+    @include('admin.layouts.script')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @php
         $messageType = '';
         $message = '';

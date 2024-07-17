@@ -32,7 +32,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">Jenis Kriteria</label>
-                        <input type="text" name="description" id="description" class="form-control" placeholder="Masukkan jenis kriteria" value="{{ old('description') }}">
+                        <select name="description" id="description" class="form-control">
+                            <option value="" {{ old('description') == '' ? 'selected' : '' }}>Pilih Kriteria</option>
+                            <option value="Benefit" {{ old('description') == 'Benefit' ? 'selected' : '' }}>Benefit</option>
+                            <option value="Cost" {{ old('description') == 'Cost' ? 'selected' : '' }}>Cost</option>
+                        </select>
                         @error('description')
                             <div class="alert alert-danger" style="margin-top: 5px">{{ $message }}</div>
                         @enderror

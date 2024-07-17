@@ -11,7 +11,8 @@
         .table-container table {
             width: 100%;
             border-collapse: collapse;
-            overflow: hidden; /* Menyembunyikan overflow agar tidak muncul scrollbar */
+            overflow: hidden;
+            /* Menyembunyikan overflow agar tidak muncul scrollbar */
         }
     </style>
 </head>
@@ -23,7 +24,7 @@
         id="sidenav-main">
 
         @include('sidenav')
-        
+
         <hr class="horizontal dark mt-0">
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             {{-- Start Sidebar --}}
@@ -96,8 +97,12 @@
                                                             <i class="fa fa-ellipsis-v text-xs"></i>
                                                         </button>
                                                         <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" href="#">Show</a></li>
-                                                            <li><a class="dropdown-item" href="{{ route('admin.criterias.edit', $criteria->id) }}">Edit</a></li>
+                                                            <li><a class="dropdown-item"
+                                                                    href="{{ route('admin.criterias.show', $criteria->id) }}">Show</a>
+                                                            </li>
+                                                            <li><a class="dropdown-item"
+                                                                    href="{{ route('admin.criterias.edit', $criteria->id) }}">Edit</a>
+                                                            </li>
                                                             <li>
                                                                 <form
                                                                     action="{{ route('admin.criterias.destroy', $criteria->id) }}"
@@ -134,6 +139,33 @@
     </main>
     <!--   Core JS Files   -->
     @include('admin.layouts.script')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @php
+        $messageType = '';
+        $message = '';
+
+        if (Session::get('success')) {
+            $messageType = 'success';
+            $message = Session::get('success');
+        } elseif (Session::get('failed')) {
+            $messageType = 'error'; // SweetAlert2 uses 'error' for failure messages
+            $message = Session::get('failed');
+        }
+    @endphp
+
+    @if ($message)
+        <script>
+            Swal.fire({
+                title: '{{ $messageType === 'success' ? 'Success' : 'Error' }}',
+                text: '{{ $message }}',
+                icon: '{{ $messageType }}', // This will show the correct icon
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>

@@ -46,21 +46,21 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        // Validate the request data
+        // Validasi data permintaan
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // If validation fails, redirect back with errors
+        // Jika validasi gagal, arahkan kembali dengan kesalahan
         if ($validator->fails()) {
             return redirect()->route('register-view')
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        // Create user data array
+        // Buat susunan data pengguna
         $data = [
             'name' => $request->name,
             'email' => $request->email,
@@ -68,10 +68,10 @@ class AuthController extends Controller
             'role' => 'user',
         ];
 
-        // Create the user
+        // Buat pengguna
         User::create($data);
 
-        // Redirect to the login page with success message
+        // Redirect ke halaman login dengan pesan sukses
         return redirect()->route('login')->with('success', 'Registrasi Berhasil');
     }
 

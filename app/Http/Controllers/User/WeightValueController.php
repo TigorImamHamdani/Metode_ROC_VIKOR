@@ -5,34 +5,27 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Alternative;
 use App\Models\Criteria;
-use App\Models\Ranking;
 use App\Models\WeightValue;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
 
-class WeightController extends Controller
+class WeightValueController extends Controller
 {
     public function index()
     {
-        // Ambil semua kriteria dari database
-        $criterias = Criteria::all();
+        // Dapatkan pengguna yang masuk
         $user = Auth::user();
 
-        // Get user-specific weight values from the database
+        // Dapatkan semua kriteria dari database
+        $criterias = Criteria::all();
+
+        // Dapatkan nilai bobot spesifik pengguna dari database
         $userWeights = WeightValue::where('user_id', $user->id)->pluck('weight', 'criteria_id');
 
-        // Hitung jumlah kriteria
-        $totalCriteria = count($criterias);
-
-        if ($totalCriteria == 0) {
-            return view('user.pages.input-weight.index', compact('criterias'));
-        }
-
-        // Inisialisasi array untuk menyimpan hasil perhitungan bobot ROC
-
-        $weightValue = []; // Inisialisasi array nilai bobot
+        // Inisialisasi array untuk menyimpan bobot ROC
+        $weightValue = [];
 
         // Hitung bobot ROC untuk setiap kriteria
         foreach ($criterias as $criteria) {
@@ -56,13 +49,14 @@ class WeightController extends Controller
                 }
             }
 
-            // Simpan bobot ROC dalam larik
+            // Simpan bobot ROC dalam array
             $weightValue[$criteria->id] = $weightROC / count($criterias);
         }
-        // Ambil semua data alternatif dari database
+
+        // Dapatkan semua alternatif dari database
         $alternatives = Alternative::all();
 
-        // Kirim data kriteria dan hasil perhitungan bobot ROC ke view
+        // Kirim kriteria dan penghitungan bobot ROC ke tampilan
         return view('user.pages.input-weight.index', compact('criterias', 'weightValue', 'alternatives'));
     }
 
@@ -77,45 +71,53 @@ class WeightController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        foreach ($request->values as $criteria_id => $weight) {
-            $criteria = Criteria::find($criteria_id);
+        $user = auth()->user();
 
-            if ($criteria) {
-                $criteria->weight = $weight;
-                $criteria->save();
-            }
+        foreach ($request->values as $criteria_id => $weight) {
+            WeightValue::updateOrCreate(
+                ['user_id' => $user->id, 'criteria_id' => $criteria_id],
+                ['weight' => $weight]
+            );
         }
 
         return redirect()->route('user.result.index')->with('success', 'Bobot berhasil diperbarui.');
     }
 
+    // Perbarui fungsi untuk memperbarui nilai bobot tertentu
     public function update(Request $request, $criteria_id)
     {
         $request->validate([
             'weight' => 'required|numeric|min:1|max:100',
         ]);
 
-        // Temukan kriteria berdasarkan ID
-        $criteria = Criteria::findOrFail($criteria_id);
+        $user = auth()->user();
 
-        // Perbarui bobot
-        $criteria->update([
-            'weight' => $request->weight,
-        ]);
+        WeightValue::updateOrCreate(
+            ['user_id' => $user->id, 'criteria_id' => $criteria_id],
+            ['weight' => $request->weight]
+        );
 
         return redirect()->route('user.result.index')->with('success', 'Data kriteria berhasil disimpan.');
     }
 
-
+    // Edit berfungsi untuk menampilkan form untuk mengedit nilai bobot tertentu
     public function edit($criteria_id)
     {
+        $user = auth()->user();
         $criteria = Criteria::findOrFail($criteria_id);
-        return view('user.pages.input-weight.edit', compact('criteria'));
+        $weightValue = WeightValue::where('user_id', $user->id)->where('criteria_id', $criteria_id)->firstOrFail();
+
+        return view('user.pages.input-weight.edit', compact('criteria', 'weightValue'));
     }
 
-    public function destroy(Criteria $criteria)
+    // Hancurkan fungsi untuk menghapus nilai bobot tertentu
+    public function destroy($criteria_id)
     {
-        $criteria->delete();
-        return redirect()->route('user.weight.index')->with('success', 'Data kriteria berhasil dihapus.');
+        $user = auth()->user();
+        $weightValue = WeightValue::where('user_id', $user->id)->where('criteria_id', $criteria_id)->firstOrFail();
+
+        $weightValue->delete();
+
+        return redirect()->route('user.weight.index')->with('success', 'Data bobot berhasil dihapus.');
     }
 }

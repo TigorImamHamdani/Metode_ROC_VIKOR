@@ -12,7 +12,32 @@
             width: 100%;
             border-collapse: collapse;
             overflow: hidden;
-            /* Menyembunyikan overflow agar tidak muncul scrollbar */
+
+        }
+
+        .footer-info {
+            margin-bottom: 20px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        .footer-links ul li a {
+            text-decoration: none;
+            color: #000;
+            transition: color 0.3s;
+        }
+
+        .footer-links ul li a:hover {
+            color: #007bff;
         }
     </style>
 </head>
@@ -77,16 +102,17 @@
                                         <div class="mb-3">
                                             <label for="criteria_name" class="form-label">Nama</label>
                                             <input type="text" name="criteria_name" id="criteria_name"
-                                                class="form-control" value="{{ $criteria->criteria_name }}" disabled >
+                                                class="form-control" value="{{ $criteria->criteria_name }}" disabled>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="weight" class="form-label">Bobot</label>
-                                            <input type="text" name="weight" id="weight" class="form-control"
-                                                value="{{ $criteria->weight }}">
+                                            <input type="number" name="weight" id="weight" class="form-control"
+                                                value="{{ $weightValue->weight }}">
                                         </div>
                                         <button type="submit" class="btn btn-primary">Submit</button>
-                                        <button type="button" onclick="history.back()" class="btn btn-danger">Kembali</button>
+                                        <button type="button" onclick="history.back()"
+                                            class="btn btn-danger">Kembali</button>
                                     </form>
                                 </div>
                             </div>
@@ -102,6 +128,33 @@
     </main>
     <!--   Core JS Files   -->
     @include('user.layouts.script')
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @php
+        $messageType = '';
+        $message = '';
+
+        if (Session::get('success')) {
+            $messageType = 'success';
+            $message = Session::get('success');
+        } elseif (Session::get('failed')) {
+            $messageType = 'error'; // SweetAlert2 uses 'error' for failure messages
+            $message = Session::get('failed');
+        }
+    @endphp
+
+    @if ($message)
+        <script>
+            Swal.fire({
+                title: '{{ $messageType === 'success' ? 'Success' : 'Error' }}',
+                text: '{{ $message }}',
+                icon: '{{ $messageType }}', // This will show the correct icon
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>

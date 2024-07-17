@@ -20,4 +20,9 @@ class Criteria extends Model
     {
         return $this->hasMany(AlternativeValue::class, 'criteria_id');
     }
+
+    public function weightValues()
+    {
+        return $this->hasMany(WeightValue::class);
+    }
 }

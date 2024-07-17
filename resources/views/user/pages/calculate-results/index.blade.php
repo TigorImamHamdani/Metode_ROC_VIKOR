@@ -2,113 +2,84 @@
 <html lang="en">
 
 <head>
-    @include('user.layouts.head')
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{{ asset('impact/assets/img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('impact/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{{ asset('impact/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('impact/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('impact/assets/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('impact/assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('impact/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{{ asset('impact/assets/css/main.css') }}" rel="stylesheet">
+
+    <script>
+        let refreshCount = localStorage.getItem('refreshCount') || 0;
+
+        if (refreshCount < 3) {
+            localStorage.setItem('refreshCount', ++refreshCount);
+            setTimeout(() => {
+                location.reload();
+            }, 10);
+        } else {
+            localStorage.removeItem('refreshCount');
+        }
+    </script>
 </head>
 
-<body class="g-sidenav-show   bg-gray-100">
-    <div class="min-height-300 bg-primary position-absolute w-100"></div>
-    <aside
-        class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 "
-        id="sidenav-main">
+<body>
+    @include('user.layouts.header')
+    <!-- End Header -->
+    <div style="height: 30px;"></div>
 
-        @include('sidenav')
-
-        <hr class="horizontal dark mt-0">
-        <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
-            {{-- Start Sidebar --}}
-            @include('user.layouts.sidebar')
-            {{-- End Sidebar --}}
-        </div>
-    </aside>
-    <main class="main-content position-relative border-radius-lg">
-        <!-- Navbar -->
-        @include('user.layouts.navbar')
-        <!-- End Navbar -->
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    @if ($criterias->isEmpty() && $alternatives->isEmpty())
-                        <p>Perhitungan belum ada</p>
-                    @else
-                        <div class="card mb-4">
-                            <div class="card-header pb-0">
-                                <div class="row">
-                                    <div class="col">
-                                        <h6>Normalisasi Matrik</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body px-0 pt-0 pb-2">
-                                <div class="table">
-                                    @include('user.pages.calculate-results.normalization-matrix')
-                                </div>
-                            </div>
+    <main id="main">
+        <section>
+            <div class="container-fluid py-4">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="section-header">
+                            <h2>Hasil Rekomendasi </h2>
+                            <p>Berikut adalah hasil rekomendasi pantai yang ada di Malang berdasarkan preferensi Anda.
+                            </p>
                         </div>
+                        @if ($criterias->isEmpty() && $alternatives->isEmpty())
+                            <p>Perhitungan belum ada</p>
+                        @else
+                            @include('user.pages.calculate-results.normalization-matrix')
 
-                        <div class="card mb-4">
-                            <div class="card-header pb-0">
-                                <div class="row">
-                                    <div class="col">
-                                        <h6>Normalisasi Bobot</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body px-0 pt-0 pb-2">
-                                <div class="table">
-                                    @include('user.pages.calculate-results.normalization-weight')
-                                </div>
-                            </div>
-                        </div>
+                            @include('user.pages.calculate-results.normalization-weight')
 
-                        <div class="card mb-4">
-                            <div class="card-header pb-0">
-                                <div class="row">
-                                    <div class="col">
-                                        <h6>Nilai Utility Measure dan Regret Measure</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body px-0 pt-0 pb-2">
-                                <div class="table">
-                                    @include('user.pages.calculate-results.value-measure')
-                                </div>
-                            </div>
-                        </div>
+                            @include('user.pages.calculate-results.value-measure')
 
-                        <div class="card mb-4">
-                            <div class="card-header pb-0">
-                                <div class="row">
-                                    <div class="col">
-                                        <h6>Hasil Perhitungan</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body px-0 pt-0 pb-2">
-                                <div class="table">
-                                    @include('user.pages.calculate-results.value-result')
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                            @include('user.pages.calculate-results.value-result')
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
+    </main><!-- End #main -->
 
-        {{-- Start Modal --}}
+    <!-- ======= Footer ======= -->
+    @include('user.layouts.footer')
+    <!-- End Footer -->
 
-        @include('user.pages.input-matrix.modal.addmatrik')
-
-        {{-- End Modal --}}
-
-        {{-- Start Footer --}}
-
-        @include('user.layouts.footer')
-
-        {{-- End Footer --}}
-        </div>
-    </main>
-    <!--   Core JS Files   -->
+    <!-- Vendor JS Files -->
     @include('user.layouts.script')
 </body>
 

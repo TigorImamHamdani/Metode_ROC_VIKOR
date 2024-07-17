@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
 
 class Alternative extends Model
 {
@@ -20,5 +22,13 @@ class Alternative extends Model
     public function alternative_values()
     {
         return $this->hasMany(AlternativeValue::class, 'alternative_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($alternative) {
+            Storage::disk('public')->delete($alternative->image);
+        });
     }
 }
